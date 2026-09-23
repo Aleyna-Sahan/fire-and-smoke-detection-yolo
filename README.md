@@ -1,47 +1,67 @@
 # 🔥 Real-Time Fire & Smoke Detection with YOLO
 
-An end-to-end computer vision project focused on early fire and smoke detection in real-world surveillance scenarios using the YOLO object detection architecture.
+An end-to-end Computer Vision pipeline designed for early wildfire, structure fire, and smoke detection in real-world surveillance systems.
 
 ---
 
 ## 📌 Project Overview
-Early detection of smoke and fire plays a crucial role in disaster mitigation and public safety. This project trains and evaluates a YOLO-based detector capable of identifying smoke plumes and open flame patterns under varying environmental conditions.
-
-The trained model was subsequently evaluated against real-world YouTube video streams to test generalization capability against false positives (e.g., lighting variations, complex backgrounds).
+Early detection of fire and hazardous smoke is critical for minimizing environmental and property loss. This project delivers a high-accuracy, low-latency object detection model trained on custom annotated data to identify fire origins and rising smoke columns under varying lighting and atmospheric conditions.
 
 ---
 
-## 🎬 Real-World Inferences (Test Results)
+## 🎬 Real-World Inferences (Testing Phase)
 
-| Test Video 1 (Fire & Smoke) | Test Video 2 (Smoke Detection) |
+The trained model was benchmarked against unseen YouTube video sequences to test robust generalization against smoke diffusion, flickering flame artifacts, and complex backgrounds.
+
+| Fire & Smoke Detection Demo | Smoke Dispersion Demo |
 | :---: | :---: |
-| ![Test 1](assets/demo1.gif) | ![Test 2](assets/demo2.gif) |
-*(Not: assets içine mp4 yerine 5-10 saniyelik gif koyarsanız GitHub doğrudan README üzerinde otomatik oynatır.)*
+| ![Inference 1](assets/demo1.gif) | ![Inference 2](assets/demo2.gif) |
 
 ---
 
-## 📊 Dataset
-The model was trained on the **[Smoke and Fire Detection Dataset (YOLO)](https://www.kaggle.com/datasets/sayedgamal99/smoke-fire-detection-yolo)** from Kaggle.
-* **Classes:** `Fire`, `Smoke`
-* **Annotations:** YOLO format (Bounding boxes with normalized coordinates)
-* **Pre-processing:** Applied data augmentation (rotation, scaling, contrast adjustment) to handle edge scenarios.
+## 📊 Training Performance & Evaluation Metrics
+
+The model converged with high precision, demonstrating strong class separation between subtle smoke textures and ambient background noise.
+
+### 1. Training Loss & Metric Curves
+![Training Results](assets/metrics/results.png)
+
+### 2. Confusion Matrix & Precision-Recall
+| Normalized Confusion Matrix | Precision-Recall (PR) Curve |
+| :---: | :---: |
+| ![Confusion Matrix](assets/metrics/confusion_matrix_normalized.png) | ![PR Curve](assets/metrics/BoxPR_curve.png) |
+
+### 3. Validation Sample Predictions
+Ground truth vs. predicted bounding boxes on unseen validation batches:
+![Validation Batch Prediction](assets/metrics/val_batch0_pred.jpg)
 
 ---
 
-## 🛠 Tech Stack
-* **Language:** Python
-* **Deep Learning Framework:** PyTorch, Ultralytics YOLO
-* **Computer Vision:** OpenCV
-* **Environment:** Jupyter Notebook / Google Colab
+## 📁 Dataset Details
+* **Source:** [Smoke and Fire Detection Dataset (YOLO)](https://www.kaggle.com/datasets/sayedgamal99/smoke-fire-detection-yolo) on Kaggle
+* **Target Classes:** `0: Fire`, `1: Smoke`
+* **Format:** YOLO annotation (`<class_id> <x_center> <y_center> <width> <height>`)
+* **Preprocessing & Augmentation:** HSV jittering, horizontal flip, mosaic augmentation, and multi-scale resizing.
 
 ---
 
-## 📂 Repository Structure
+## 📂 Repository Layout
 ```text
-├── assets/                  # Demo gifs/images extracted from YouTube inference
+fire-and-smoke-detection-yolo/
+├── assets/
+│   ├── demo1.gif                  # Sample YouTube inference demo
+│   ├── demo2.gif                  # Sample YouTube inference demo
+│   └── metrics/                   # Loss curves, confusion matrix, PR curves
+│       ├── results.png
+│       ├── confusion_matrix_normalized.png
+│       ├── BoxPR_curve.png
+│       └── val_batch0_pred.jpg
 ├── notebooks/
-│   ├── image_processing.ipynb   # Initial data analysis and visual pre-processing
-│   └── yolo_training.ipynb      # Model training pipeline, hyperparameter tuning & loss curves
-├── weights/                 # Trained model weights (best.pt)
-├── requirements.txt         # Dependencies
+│   ├── image_processing.ipynb     # Exploratory data analysis & image transforms
+│   ├── yolo_training.ipynb        # Fine-tuning loop, hyperparameter config
+│   ├── results.csv                # Raw training epoch logs
+│   └── training_args.yaml         # Training arguments & hyperparameters
+├── weights/
+│   └── best.pt                    # Best checkpoint weights
+├── requirements.txt               # Environment dependencies
 └── README.md
