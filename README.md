@@ -81,3 +81,42 @@ fire-and-smoke-detection-yolo/
 │   └── best.pt                    # Fine-tuned YOLO11s model weights (19.2 MB)
 ├── requirements.txt               # Dependencies
 └── README.md
+```
+
+---
+
+## 🚀 Quick Start & Usage
+
+### 1. Installation
+```bash
+git clone [https://github.com/Aleyna-Sahan/fire-and-smoke-detection-yolo.git](https://github.com/Aleyna-Sahan/fire-and-smoke-detection-yolo.git)
+cd fire-and-smoke-detection-yolo
+pip install -r requirements.txt
+```
+
+### 2. Real-Time Inference on Video Stream
+```python
+from ultralytics import YOLO
+
+# Load the fine-tuned model
+model = YOLO("weights/best.pt")
+
+# Predict on YouTube video or local video with RAM-safe streaming
+results = model.predict(
+    source="[https://www.youtube.com/watch?v=awdbnnbSpQw](https://www.youtube.com/watch?v=awdbnnbSpQw)",
+    conf=0.5,
+    imgsz=320,
+    half=True,
+    stream=True,
+    save=True
+)
+
+for r in results:
+    pass
+```
+
+---
+
+## 👤 Author
+* **Aleyna Şahan**
+  * GitHub: [@Aleyna-Sahan](https://github.com/Aleyna-Sahan)
