@@ -1,67 +1,83 @@
-# 🔥 Real-Time Fire & Smoke Detection with YOLO
+# 🔥 Real-Time Fire & Smoke Detection with YOLO11
 
-An end-to-end Computer Vision pipeline designed for early wildfire, structure fire, and smoke detection in real-world surveillance systems.
+An end-to-end computer vision and deep learning project aimed at early detection of wildfires, structural fires, and rising smoke plumes using the latest **YOLO11s** architecture. 
 
----
-
-## 📌 Project Overview
-Early detection of fire and hazardous smoke is critical for minimizing environmental and property loss. This project delivers a high-accuracy, low-latency object detection model trained on custom annotated data to identify fire origins and rising smoke columns under varying lighting and atmospheric conditions.
+The model was fine-tuned on a multi-class dataset and stress-tested against unseen real-world YouTube video streams using memory-optimized inference pipelines.
 
 ---
 
-## 🎬 Real-World Inferences (Testing Phase)
+## 📌 Key Highlights
+* **Backbone:** YOLO11 Small (`yolo11s.pt` - 9.4M parameters)
+* **High Efficiency:** 2.7 ms inference speed per frame on GPU
+* **Class Separation:** Outstanding performance on diffused smoke plumes (**83.7% mAP50**)
+* **Lightweight Model:** `best.pt` is only **19.2 MB**, fully ready for edge devices & embedded systems
 
-The trained model was benchmarked against unseen YouTube video sequences to test robust generalization against smoke diffusion, flickering flame artifacts, and complex backgrounds.
+---
 
-| Fire & Smoke Detection Demo | Smoke Dispersion Demo |
+## 🎬 Real-World Video Inferences (YouTube Demos)
+
+The model was evaluated on real-world video streams with `conf=0.5`, `imgsz=320`, and FP16 (`half=True`) acceleration:
+
+| Demo 1: Wildfire & Smoke Dispersion | Demo 2: Industrial Fire & Smoke |
 | :---: | :---: |
-| ![Inference 1](assets/demo1.gif) | ![Inference 2](assets/demo2.gif) |
+| ![Inference Demo 1](assets/demo1.gif) | ![Inference Demo 2](assets/demo2.gif) |
+| *Source: [YouTube Vu_Q0sflTeY](https://www.youtube.com/watch?v=Vu_Q0sflTeY)* | *Source: [YouTube awdbnnbSpQw](https://www.youtube.com/watch?v=awdbnnbSpQw)* |
 
 ---
 
-## 📊 Training Performance & Evaluation Metrics
+## 📊 Benchmark & Evaluation Results
 
-The model converged with high precision, demonstrating strong class separation between subtle smoke textures and ambient background noise.
+Evaluated on unseen validation split (3,094 images, 3,917 instances):
 
-### 1. Training Loss & Metric Curves
-![Training Results](assets/metrics/results.png)
+| Class | Precision (P) | Recall (R) | mAP@50 | mAP@50-95 |
+| :--- | :---: | :---: | :---: | :---: |
+| **All Classes** | **0.796** | **0.700** | **0.780** | **0.459** |
+| 🌫️ **Smoke** | 0.837 | 0.773 | **0.837** | 0.524 |
+| 🔥 **Fire** | 0.754 | 0.627 | **0.723** | 0.394 |
 
-### 2. Confusion Matrix & Precision-Recall
+* **Speed Metrics (per image):**
+  * Preprocess: `0.2 ms`
+  * Inference: `2.7 ms`
+  * Postprocess: `1.6 ms`
+
+---
+
+## 📈 Training Visualizations & Metric Curves
+
+The model was trained for 50 epochs on an NVIDIA Tesla T4 GPU (~5.34 hours).
+
+### 1. Loss & Metric Trends
+![Training Metrics](assets/metrics/results.png)
+
+### 2. Confusion Matrix & PR Curve
 | Normalized Confusion Matrix | Precision-Recall (PR) Curve |
 | :---: | :---: |
 | ![Confusion Matrix](assets/metrics/confusion_matrix_normalized.png) | ![PR Curve](assets/metrics/BoxPR_curve.png) |
 
-### 3. Validation Sample Predictions
-Ground truth vs. predicted bounding boxes on unseen validation batches:
-![Validation Batch Prediction](assets/metrics/val_batch0_pred.jpg)
+### 3. Sample Validation Ground Truth vs Predictions
+![Validation Predictions](assets/metrics/val_batch0_pred.jpg)
 
 ---
 
 ## 📁 Dataset Details
 * **Source:** [Smoke and Fire Detection Dataset (YOLO)](https://www.kaggle.com/datasets/sayedgamal99/smoke-fire-detection-yolo) on Kaggle
-* **Target Classes:** `0: Fire`, `1: Smoke`
-* **Format:** YOLO annotation (`<class_id> <x_center> <y_center> <width> <height>`)
-* **Preprocessing & Augmentation:** HSV jittering, horizontal flip, mosaic augmentation, and multi-scale resizing.
+* **Total Samples:** ~17,200+ annotated images
+* **Splits:** Train (14,101 images), Validation (3,094 images)
+* **Classes:** `0: Smoke`, `1: Fire`
 
 ---
 
-## 📂 Repository Layout
+## 📂 Repository Structure
 ```text
 fire-and-smoke-detection-yolo/
 ├── assets/
-│   ├── demo1.gif                  # Sample YouTube inference demo
-│   ├── demo2.gif                  # Sample YouTube inference demo
-│   └── metrics/                   # Loss curves, confusion matrix, PR curves
-│       ├── results.png
-│       ├── confusion_matrix_normalized.png
-│       ├── BoxPR_curve.png
-│       └── val_batch0_pred.jpg
+│   ├── demo1.gif                  # Sample YouTube test animation 1
+│   ├── demo2.gif                  # Sample YouTube test animation 2
+│   └── metrics/                   # Training loss curves, confusion matrices
 ├── notebooks/
-│   ├── image_processing.ipynb     # Exploratory data analysis & image transforms
-│   ├── yolo_training.ipynb        # Fine-tuning loop, hyperparameter config
-│   ├── results.csv                # Raw training epoch logs
-│   └── training_args.yaml         # Training arguments & hyperparameters
+│   ├── image_processing.ipynb     # Image analysis & pipeline experimentation
+│   └── yolo_training.ipynb        # Dataset setup, training loop & streaming inference
 ├── weights/
-│   └── best.pt                    # Best checkpoint weights
-├── requirements.txt               # Environment dependencies
+│   └── best.pt                    # Fine-tuned YOLO11s model weights (19.2 MB)
+├── requirements.txt               # Dependencies
 └── README.md
